@@ -7,7 +7,7 @@ print("- "*50)
 print( f"Bypassing 403 error of {target}")
 print("- "*50)
 
-'''
+
 t=0
 hy = -1
 vitrigach = []
@@ -132,4 +132,3 @@ for x in headers:
     except requests.exceptions.Timeout:
         print(f"{x}-> Timeout")
 print("[*]Header overrides finished.")
-'''
