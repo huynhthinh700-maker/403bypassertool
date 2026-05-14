@@ -155,13 +155,6 @@ Network instability may cause timeouts.
 Some techniques may not apply depending on server configuration.
 
 ----
-## 🔒 Disclaimer
-
-This tool is intended for:
-- Security research
-- Lab environments
-- Authorized penetration testing
-- Educational purposes
 
 ### Do NOT use this tool against systems without explicit permission.
 ---
